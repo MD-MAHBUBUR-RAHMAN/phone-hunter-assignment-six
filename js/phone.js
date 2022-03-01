@@ -1,5 +1,7 @@
 document.getElementById('empty').style.display = 'none'
 document.getElementById('number').style.display = 'none'
+document.getElementById('falsy').style.display = 'none'
+const falsy = ()=>{}
 //// Search field and get api:---
 const searchPhone = () =>{
 const searchField = document.getElementById('search-field')
@@ -9,13 +11,21 @@ searchField.value = ''
 //// Error
 if(serchText ===''){
     document.getElementById('empty').style.display = 'block'
+    document.getElementById('number').style.display = 'none'
+    document.getElementById('falsy').style.display = 'none'
 }else if(!isNaN(serchText)){
     document.getElementById('number').style.display = 'block'
+    document.getElementById('empty').style.display = 'none'
+    document.getElementById('falsy').style.display = 'none'
 }else{
     const url = `https://openapi.programming-hero.com/api/phones?search=${serchText}`
     fetch(url)
         .then(res => res.json())
-        .then(data => displayResult(data.data.slice(0,20)))
+        .then(data =>{if(data.status === false){
+            document.getElementById('falsy').style.display = 'block'
+            document.getElementById('empty').style.display = 'none'
+            document.getElementById('number').style.display = 'none'
+        }else{displayResult(data.data.slice(0,20))}} )
 }
 
 //// clear previous single detail search result:
@@ -27,6 +37,7 @@ detailDiv.innerText = ''
 const displayResult = phones => {
     document.getElementById('empty').style.display = 'none'
     document.getElementById('number').style.display = 'none'
+    document.getElementById('falsy').style.display = 'none'
     ////------:get container from Html file:---------
     const searchResult = document.getElementById('search-result')
     //// clear previous search result at new search:---
@@ -67,22 +78,22 @@ const displayDetail = (detail) => {
     div.classList.add("card")
     div.innerHTML = `
         <div class="card h-100">            
-             <img src="${itemDetail.data.image}" class="card-img-top w-50 mx-auto mt-3" alt="...">   
-             <div class="card-body">
-                    <h3 class="card-title">${itemDetail.data.name}</h3>
-                    <h4 class="card-title">${itemDetail.data.brand}</h4>
-                    <h5 class="card-title">${itemDetail.data.releaseDate??'Data Is Not Available'}</h5>
-                    <h4 class="card-title text-center"> Main Feature </h4>
-                    <p class="card-text"> Storage: ${itemDetail.data.mainFeatures?.storage ?? 'No storage'}</p>
-                    <p class="card-text"> Display Size: ${itemDetail.data.mainFeatures?.displaySize ?? 'Standerd'}</p>
-                    <p class="card-text"> Chip Set: ${itemDetail.data.mainFeatures?.chipSet ?? 'Reguler'}</p>
-                    <p class="card-text"> Memory:${itemDetail.data.mainFeatures?.memory ?? 'No memory Slot'}</p>
-                    <h4 class="card-title text-center"> Sensor </h4>
-                    <p class="card-text">${itemDetail.data.mainFeatures?.sensors[0] ?? 'There is no sensore includes'} ${itemDetail.data.mainFeatures?.sensors[1] ?? '.'}, ${itemDetail.data.mainFeatures?.sensors[2] ?? '.'} ${itemDetail.data.mainFeatures?.sensors[3] ?? '.'} ${itemDetail.data.mainFeatures?.sensors[4] ?? '.'} ${itemDetail.data.mainFeatures?.sensors[6] ?? '.'}</p>
-                    <h4 class="card-title text-center"> Other Information </h4>
-                    <p class="card-text"> WLAN: ${itemDetail.data.others?.WLAN ?? 'NO'},  Blutooth: ${itemDetail.data.others?.Bluetooth ?? 'NO'}, Gps: ${itemDetail.data.others?.GPS ?? 'NO'},  NFC: ${itemDetail.data.others?.NFC ?? 'NO'}, Radio: ${itemDetail.data.others?.Radio ?? 'NO'}, USB: ${itemDetail.data.others?.USB ?? 'NO'}</p>
+            <img src="${itemDetail.data.image}" class="card-img-top w-50 mx-auto mt-3" alt="...">   
+            <div class="card-body">
+                <h3 class="card-title">${itemDetail.data.name}</h3>
+                <h4 class="card-title">${itemDetail.data.brand}</h4>
+                <h6 class="card-title">${itemDetail.data.releaseDate??'Data Is Not Available'}</h6>
+                <h4 class="card-title text-center"> Main Feature </h4>
+                <p class="card-text"> Storage: ${itemDetail.data.mainFeatures?.storage ?? 'No storage'}</p>
+                <p class="card-text"> Display Size: ${itemDetail.data.mainFeatures?.displaySize ?? 'Standerd'}</p>
+                <p class="card-text"> Chip Set: ${itemDetail.data.mainFeatures?.chipSet ?? 'Reguler'}</p>
+                <p class="card-text"> Memory:${itemDetail.data.mainFeatures?.memory ?? 'No memory Slot'}</p>
+                <h4 class="card-title text-center"> Sensor </h4>
+                <p class="card-text">${itemDetail.data.mainFeatures?.sensors[0] ?? 'There is no sensore includes'} ${itemDetail.data.mainFeatures?.sensors[1] ?? '.'}, ${itemDetail.data.mainFeatures?.sensors[2] ?? '.'} ${itemDetail.data.mainFeatures?.sensors[3] ?? '.'} ${itemDetail.data.mainFeatures?.sensors[4] ?? '.'} ${itemDetail.data.mainFeatures?.sensors[6] ?? '.'}</p>
+                <h4 class="card-title text-center"> Other Information </h4>
+                <p class="card-text"> WLAN: ${itemDetail.data.others?.WLAN ?? 'NO'},  Blutooth: ${itemDetail.data.others?.Bluetooth ?? 'NO'}, Gps: ${itemDetail.data.others?.GPS ?? 'NO'},  NFC: ${itemDetail.data.others?.NFC ?? 'NO'}, Radio: ${itemDetail.data.others?.Radio ?? 'NO'}, USB: ${itemDetail.data.others?.USB ?? 'NO'}</p>
             </div>
-         </div>
+        </div>
             ` 
          // console.log(itemDetail.data.mainFeatures.sensors)
     detailDiv.appendChild(div) 
