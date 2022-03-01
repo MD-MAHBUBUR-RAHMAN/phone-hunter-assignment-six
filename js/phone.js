@@ -11,7 +11,7 @@ if(serchText===''){
     const url = `https://openapi.programming-hero.com/api/phones?search=${serchText}`
     fetch(url)
         .then(res => res.json())
-        .then(data => displayResult(data.data))
+        .then(data => displayResult(data.data.slice(0,20)))
 }
 //// clear input field:
 searchField.value = ''
@@ -29,7 +29,7 @@ const displayResult = phones => {
         div.classList.add("col")
         div.innerHTML = `
         <div class="card h-100">            
-            <img src="${phone.image}" class="card-img-top mx-center" alt="...">   
+            <img src="${phone.image}" class="card-img-top w-50 mx-auto mt-2" alt="...">   
             <div class="card-body">
                 <h5 class="card-title">${phone.phone_name}</h5>
                 <h5 class="card-title">${phone.brand}</h5>
@@ -59,7 +59,7 @@ const displayDetail = (detail) => {
     div.classList.add("card")
         div.innerHTML = `
             <div class="card h-100">            
-                <img src="${itemDetail.data.image}" class="card-img-top" alt="...">   
+                <img src="${itemDetail.data.image}" class="card-img-top w-50 mx-auto mt-3" alt="...">   
                 <div class="card-body">
                     <h3 class="card-title">${itemDetail.data.name}</h3>
                     <h4 class="card-title">${itemDetail.data.brand}</h4>
@@ -76,6 +76,7 @@ const displayDetail = (detail) => {
                 </div>
             </div>
             ` 
+            console.log(itemDetail.data.mainFeatures.sensors)
     detailDiv.appendChild(div) 
     }   
 }
